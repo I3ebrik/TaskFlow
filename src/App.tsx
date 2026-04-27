@@ -19,16 +19,16 @@ const STORAGE_KEY = 'taskflow-github-project-v1'
 const starterTasks: Task[] = [
   {
     id: crypto.randomUUID(),
-    title: 'Собрать структуру проекта',
-    details: 'Настроить папки, базовые компоненты и README для GitHub.',
+    title: 'Обновить README перед пушем',
+    details: 'Коротко описать проект и команды для запуска.',
     priority: 'high',
     done: true,
     createdAt: new Date().toISOString(),
   },
   {
     id: crypto.randomUUID(),
-    title: 'Добавить локальное сохранение',
-    details: 'Сохранять задачи в localStorage, чтобы они не пропадали после перезагрузки.',
+    title: 'Сверстать аккуратную мобильную версию',
+    details: 'Проверить отступы и кнопки на маленьком экране.',
     priority: 'medium',
     done: false,
     createdAt: new Date().toISOString(),
@@ -56,6 +56,23 @@ const getInitialTasks = (): Task[] => {
   }
 }
 
+const formatTaskDate = (dateISO: string): string => {
+  const date = new Date(dateISO)
+
+  return new Intl.DateTimeFormat('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date)
+}
+
+const todayLabel = new Intl.DateTimeFormat('ru-RU', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+}).format(new Date())
+
 function App() {
   const [tasks, setTasks] = useState<Task[]>(getInitialTasks)
   const [title, setTitle] = useState('')
@@ -82,6 +99,7 @@ function App() {
   const total = tasks.length
   const completed = tasks.filter((task) => task.done).length
   const completionRate = total === 0 ? 0 : Math.round((completed / total) * 100)
+  const hasCompleted = completed > 0
 
   const addTask = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -129,11 +147,12 @@ function App() {
   return (
     <main className="layout">
       <header className="panel hero">
-        <p className="eyebrow">React + TypeScript Project</p>
-        <h1>TaskFlow</h1>
+        <p className="eyebrow">Pet-проект на React</p>
+        <h1>Мой список дел</h1>
         <p className="subtitle">
-          Мини-проект для GitHub: управление задачами с фильтрами, приоритетами и сохранением данных в браузере.
+          Небольшой трекер задач для повседневных дел. Без регистрации, просто открыл и записал.
         </p>
+        <p className="today">План на {todayLabel}</p>
       </header>
 
       <section className="panel stats" aria-label="Статистика">
@@ -142,7 +161,7 @@ function App() {
           <strong>{total}</strong>
         </article>
         <article>
-          <span>Выполнено</span>
+          <span>Сделано</span>
           <strong>{completed}</strong>
         </article>
         <article>
@@ -159,16 +178,16 @@ function App() {
             id="task-title"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            placeholder="Например: Подготовить README"
+            placeholder="Например: купить домен для портфолио"
           />
 
-          <label htmlFor="task-details">Описание</label>
+          <label htmlFor="task-details">Комментарий</label>
           <textarea
             id="task-details"
             value={details}
             onChange={(event) => setDetails(event.target.value)}
             rows={3}
-            placeholder="Добавь короткое описание задачи"
+            placeholder="Можно оставить пустым"
           />
 
           <label htmlFor="task-priority">Приоритет</label>
@@ -182,13 +201,13 @@ function App() {
             <option value="high">Высокий</option>
           </select>
 
-          <button type="submit">Добавить задачу</button>
+          <button type="submit">Добавить</button>
         </form>
       </section>
 
       <section className="panel list-panel" aria-label="Список задач">
         <div className="list-head">
-          <h2>Задачи</h2>
+          <h2>Что в работе</h2>
           <div className="filters" role="tablist" aria-label="Фильтр задач">
             <button
               type="button"
@@ -202,20 +221,20 @@ function App() {
               className={filter === 'active' ? 'active' : ''}
               onClick={() => setFilter('active')}
             >
-              Активные
+              В процессе
             </button>
             <button
               type="button"
               className={filter === 'done' ? 'active' : ''}
               onClick={() => setFilter('done')}
             >
-              Готово
+              Сделано
             </button>
           </div>
         </div>
 
         {filteredTasks.length === 0 ? (
-          <p className="empty">По текущему фильтру задач нет.</p>
+          <p className="empty">Сейчас пусто. Самое время добавить первую задачу.</p>
         ) : (
           <ul>
             {filteredTasks.map((task) => (
@@ -235,9 +254,7 @@ function App() {
                     <span className={`priority ${task.priority}`}>
                       {priorityLabel[task.priority]}
                     </span>
-                    <time dateTime={task.createdAt}>
-                      {new Date(task.createdAt).toLocaleDateString('ru-RU')}
-                    </time>
+                    <time dateTime={task.createdAt}>{formatTaskDate(task.createdAt)}</time>
                   </div>
                 </div>
 
@@ -253,13 +270,21 @@ function App() {
           </ul>
         )}
 
-        <button type="button" className="ghost" onClick={clearCompleted}>
+        <button
+          type="button"
+          className="ghost"
+          onClick={clearCompleted}
+          disabled={!hasCompleted}
+        >
           Очистить выполненные
         </button>
       </section>
+
+      <footer className="panel note">
+        <p>Данные хранятся в браузере (localStorage), поэтому список остается после перезагрузки.</p>
+      </footer>
     </main>
   )
 }
 
 export default App
-

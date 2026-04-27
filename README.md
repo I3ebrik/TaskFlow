@@ -1,60 +1,56 @@
-﻿# TaskFlow (React + TypeScript)
+﻿# Мой список дел (React + TypeScript)
 
-TaskFlow - это учебный, но полноценный pet-проект для GitHub.
+Небольшой личный pet-проект: простой трекер задач, который хранит список прямо в браузере.
 
-Приложение помогает вести список задач:
-- создавать задачи с описанием и приоритетом;
-- отмечать выполненные;
-- фильтровать задачи (все, активные, выполненные);
-- удалять задачи и очищать выполненные;
-- сохранять данные в `localStorage`.
+Что есть в текущей версии:
+- добавление задач с приоритетом;
+- фильтры по статусу (все, в процессе, сделано);
+- отметка выполнения и удаление задач;
+- очистка выполненных задач;
+- сохранение в `localStorage`.
 
 ## Стек
 
 - React 19
 - TypeScript
 - Vite
-- CSS
+- Чистый CSS
 
-## Быстрый старт
+## Запуск
 
 ```bash
 npm install
 npm run dev
 ```
 
-Открой `http://localhost:5173`.
+По умолчанию приложение доступно на `http://localhost:5173`.
 
-## Сборка
+## Проверка качества
 
 ```bash
+npm run lint
 npm run build
-npm run preview
 ```
 
-## Структура
+## Структура проекта
 
 ```text
 src/
-  App.tsx      # Логика приложения
-  App.css      # Стили интерфейса
-  main.tsx     # Точка входа
-  index.css    # Глобальные стили
+  App.tsx
+  App.css
+  index.css
+  main.tsx
 ```
 
-## Как залить на GitHub
+## Публикация в GitHub
 
 ```bash
-git init
-git add .
-git commit -m "feat: create TaskFlow react project"
-git branch -M main
-git remote add origin https://github.com/<your-username>/<your-repo>.git
+git remote add origin https://github.com/<username>/<repo>.git
 git push -u origin main
 ```
 
-## Идеи для улучшения
+## Дальше можно добавить
 
-- Добавить дедлайны и сортировку по дате.
-- Добавить drag-and-drop для задач.
-- Подключить backend (например, Firebase/Supabase).
+- дедлайны и сортировку по сроку;
+- поиск по названию задачи;
+- отдельную страницу со статистикой.
